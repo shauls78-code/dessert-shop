@@ -88,6 +88,7 @@ const WHATSAPP_LINK = "https://api.whatsapp.com/send?phone=9720506793031";
 function App() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [showCart, setShowCart] = useState(false);
+  const [showMenuModal, setShowMenuModal] = useState(false);
 
   const toggleCart = () => {
     setShowCart(!showCart);
@@ -95,6 +96,14 @@ function App() {
 
   const goToHome = () => {
     setShowCart(false);
+  };
+
+  const openMenuModal = () => {
+    setShowMenuModal(true);
+  };
+
+  const closeMenuModal = () => {
+    setShowMenuModal(false);
   };
 
   const addToCart = (product: Product) => {
@@ -261,7 +270,7 @@ function App() {
                   </div>
                 </div>
               ))}
-              <div className="menu-card">
+              <div className="menu-card" onClick={openMenuModal}>
                 <div className="menu-image">
                   <img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663365476934/pbeFjKtVVbICiDpI.jpeg" alt="תפריט קינוחים" />
                 </div>
@@ -274,6 +283,15 @@ function App() {
           </div>
         )}
       </main>
+
+      {showMenuModal && (
+        <div className="modal-overlay" onClick={closeMenuModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close" onClick={closeMenuModal}>✕</button>
+            <img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663365476934/pbeFjKtVVbICiDpI.jpeg" alt="תפריט קינוחים" className="modal-image" />
+          </div>
+        </div>
+      )}
 
       <footer className="footer">
         <p>📞 צור קשר: 0506793031</p>
