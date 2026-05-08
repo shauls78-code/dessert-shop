@@ -294,9 +294,19 @@ function App() {
       )}
 
       <footer className="footer">
-        <p>📞 צור קשר: 0506793031</p>
-        <p>📧 דוא"ל: shaul79@hotmail.com</p>
-        <p>📍 משלוח בגוש דן בלבד</p>
+        <div className="footer-content">
+          <div className="footer-info">
+            <p>📞 צור קשר: 0506793031</p>
+            <p>📧 דוא"ל: shaul79@hotmail.com</p>
+            <p>📍 משלוח בגוש דן בלבד</p>
+          </div>
+          <button 
+            className="footer-whatsapp-btn"
+            onClick={() => window.open(WHATSAPP_LINK, '_blank')}
+          >
+            💬 צור קשר בווטסאפ
+          </button>
+        </div>
       </footer>
     </div>
   );
