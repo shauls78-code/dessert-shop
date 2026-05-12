@@ -29,7 +29,7 @@ const products: Product[] = [
     name: "כדורי שוקולד",
     description: "מארז של 10 יחידות",
     image: "https://files.cdn-files-a.com/uploads/9354289/800_681c45abd7620.jpg?width=400",
-    price: 45,
+    price: 55,
     unit: "10 יח'"
   },
   {
