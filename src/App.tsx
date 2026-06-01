@@ -272,7 +272,7 @@ function App() {
               ))}
               <div className="menu-card" onClick={openMenuModal}>
                 <div className="menu-image">
-                  <img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663365476934/pbeFjKtVVbICiDpI.jpeg" alt="תפריט קינוחים" />
+                  <img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663365476934/aZxzMVwiMYyZpyrP.jpeg" alt="תפריט קינוחים" />
                 </div>
                 <div className="menu-info">
                   <h3>תפריט קינוחים</h3>
@@ -288,7 +288,7 @@ function App() {
         <div className="modal-overlay" onClick={closeMenuModal}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close" onClick={closeMenuModal}>✕</button>
-            <img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663365476934/pbeFjKtVVbICiDpI.jpeg" alt="תפריט קינוחים" className="modal-image" />
+            <img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663365476934/aZxzMVwiMYyZpyrP.jpeg" alt="תפריט קינוחים" className="modal-image" />
           </div>
         </div>
       )}
