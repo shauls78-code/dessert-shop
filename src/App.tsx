@@ -299,6 +299,7 @@ function App() {
             <p>📞 צור קשר: 0506793031</p>
             <p>📧 דוא"ל: shaul79@hotmail.com</p>
             <p>📍 משלוח בגוש דן בלבד</p>
+            <p>💳 אנחנו מקבלים: כרטיס אשראי, ביט, פייבוקס</p>
           </div>
           <button 
             className="footer-whatsapp-btn"
