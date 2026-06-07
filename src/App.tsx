@@ -84,7 +84,7 @@ const products: Product[] = [
     id: 9,
     name: "4 פצצות תה",
     description: "הכירו את הדרך החדשה והמרגשת ליהנות מתה.\nכל פצצת תה היא כדור סוכר מנופח ועדין, שבתוכו מסתתרים פירות מיובשים וחליטות תה איכותיות. ברגע שמוזגים מים חמים, הכדור מתמוסס בהדרגה ומשחרר אל הכוס עולם של טעמים, צבעים וניחוחות.\nאת הפירות ניתן גם לאכול בתום השתיה .\n\nזו לא רק כוס תה – זו חוויה מרגיעה, מפנקת ומיוחדת שמתאימה לרגע של שקט, לאירוח או כמתנה מקורית למי שאוהבים.",
-    image: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663365476934/ryxxGTBmdDGKyxxR.jpg",
+    image: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663365476934/xcMYDOvYMnZGcIEW.png",
     price: 40,
     unit: "מארז"
   }
