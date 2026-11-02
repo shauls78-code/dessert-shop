@@ -103,7 +103,7 @@ const packages: Product[] = [
     id: 11,
     name: "זר שוקולד למתנה",
     description: "כ-20 כדורי שוקולד על שיפודים, ארוזים כמו זר פרחים – מתנה מתוקה ומרשימה",
-    image: "https://files.cdn-files-a.com/uploads/9354289/800_681c45abd7620.jpg?width=400",
+    image: "/chocolate-bouquet.jpg",
     price: 139,
     unit: "זר"
   },
@@ -317,7 +317,6 @@ function App() {
                   <span className="packages-eyebrow">מהדורה מוגבלת</span>
                   <h3 id="packages-heading" className="catalog-heading">מארזי השבוע</h3>
                 </div>
-                <p>השבוע אני אופה רק 10 מארזי קינוחים בעבודת יד — הזמינו מראש כדי לא לפספס.</p>
               </div>
               <div className="products-grid packages-grid">
                 {packages.map(product => (
