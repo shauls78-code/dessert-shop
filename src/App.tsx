@@ -90,6 +90,34 @@ const products: Product[] = [
   }
 ];
 
+const packages: Product[] = [
+  {
+    id: 10,
+    name: "מארז שולחן",
+    description: "10 כוסיות מוס (שוקולד וגבינה), 10 כדורי שוקולד ועוגת שוקולד עשירה – מתאים לכ-8 אנשים",
+    image: "https://files.cdn-files-a.com/uploads/9354289/800_681c453c94134.jpg?width=400",
+    price: 195,
+    unit: "מארז"
+  },
+  {
+    id: 11,
+    name: "זר שוקולד למתנה",
+    description: "כ-20 כדורי שוקולד על שיפודים, ארוזים כמו זר פרחים – מתנה מתוקה ומרשימה",
+    image: "https://files.cdn-files-a.com/uploads/9354289/800_681c45abd7620.jpg?width=400",
+    price: 139,
+    unit: "זר"
+  },
+  {
+    id: 12,
+    name: "מארז טבעוני",
+    description: "5 מאפיני שוקולד ו-10 כדורי שוקולד – אפשרות טבעונית מפנקת",
+    image: "https://files.cdn-files-a.com/uploads/9354289/800_681c45abd7620.jpg?width=400",
+    price: 115,
+    unit: "מארז",
+    vegan: true
+  }
+];
+
 const DELIVERY_COST = 30;
 const WHATSAPP_LINK = "https://api.whatsapp.com/send?phone=9720506793031";
 
@@ -116,7 +144,7 @@ function App() {
 
   const addToCart = (product: Product) => {
     const existingItem = cart.find(item => item.id === product.id);
-    
+
     if (existingItem) {
       setCart(cart.map(item =>
         item.id === product.id
@@ -151,7 +179,7 @@ function App() {
     if (cart.length === 0) return;
 
     let message = "שלום, אני רוצה להזמין:\n\n";
-    
+
     cart.forEach(item => {
       message += `${item.name} - ${item.quantity}x ${item.unit} = ₪${item.price * item.quantity}\n`;
     });
@@ -168,7 +196,7 @@ function App() {
     <div className="app">
       <header className="header">
         <div className="header-content">
-          <button 
+          <button
             className="logo-button"
             onClick={goToHome}
             title="חזור לעמוד הבית"
@@ -176,7 +204,7 @@ function App() {
             🍫 פיתויים קולינרים
           </button>
           <p>קינוחים איכותיים</p>
-          <button 
+          <button
             className="cart-button"
             onClick={toggleCart}
           >
@@ -207,7 +235,7 @@ function App() {
                       </div>
                       <div className="cart-item-price">
                         <p>₪{item.price * item.quantity}</p>
-                        <button 
+                        <button
                           className="remove-btn"
                           onClick={() => removeFromCart(item.id)}
                         >
@@ -233,14 +261,14 @@ function App() {
                   </div>
                 </div>
 
-                <button 
+                <button
                   className="whatsapp-button"
                   onClick={sendToWhatsApp}
                 >
                   📱 שלח הזמנה לווטסאפ
                 </button>
 
-                <button 
+                <button
                   className="back-button"
                   onClick={goToHome}
                 >
@@ -255,29 +283,69 @@ function App() {
             <div className="vegan-notice">
               <p>🌱 <strong>אפשרות טבעונית:</strong> ניתן להתאים את רוב המוצרים לטבעונים. פרטים נוספים בהזמנה בווטסאפ.</p>
             </div>
-            <div className="products-grid">
-              {products.map(product => (
-                <div key={product.id} className="product-card">
-                  <div className="product-image">
-                    <img src={product.image} alt={product.name} />
-                    {product.vegan && <span className="vegan-badge">🌱 טבעוני</span>}
-                  </div>
-                  <div className="product-info">
-                    <h3>{product.name}</h3>
-                    <p className="product-description">{product.description}</p>
-                    <p className="product-unit">{product.unit}</p>
-                    <div className="product-footer">
-                      <span className="price">₪{product.price}</span>
-                      <button 
-                        className="add-button"
-                        onClick={() => addToCart(product)}
-                      >
-                        הוסף לעגלה
-                      </button>
+            <div className="catalog-section">
+              <h3 className="catalog-heading">הקינוחים שלנו</h3>
+              <div className="products-grid">
+                {products.map(product => (
+                  <div key={product.id} className="product-card">
+                    <div className="product-image">
+                      <img src={product.image} alt={product.name} />
+                      {product.vegan && <span className="vegan-badge">🌱 טבעוני</span>}
+                    </div>
+                    <div className="product-info">
+                      <h3>{product.name}</h3>
+                      <p className="product-description">{product.description}</p>
+                      <p className="product-unit">{product.unit}</p>
+                      <div className="product-footer">
+                        <span className="price">₪{product.price}</span>
+                        <button
+                          className="add-button"
+                          onClick={() => addToCart(product)}
+                        >
+                          הוסף לעגלה
+                        </button>
+                      </div>
                     </div>
                   </div>
+                ))}
+              </div>
+            </div>
+
+            <section className="packages-section" aria-labelledby="packages-heading">
+              <div className="packages-header">
+                <div>
+                  <span className="packages-eyebrow">מהדורה מוגבלת</span>
+                  <h3 id="packages-heading" className="catalog-heading">מארזי השבוע</h3>
                 </div>
-              ))}
+                <p>השבוע אני אופה רק 10 מארזי קינוחים בעבודת יד — הזמינו מראש כדי לא לפספס.</p>
+              </div>
+              <div className="products-grid packages-grid">
+                {packages.map(product => (
+                  <div key={product.id} className="product-card package-card">
+                    <div className="product-image">
+                      <img src={product.image} alt={product.name} />
+                      {product.vegan && <span className="vegan-badge">🌱 טבעוני</span>}
+                    </div>
+                    <div className="product-info">
+                      <h3>{product.name}</h3>
+                      <p className="product-description">{product.description}</p>
+                      <p className="product-unit">{product.unit}</p>
+                      <div className="product-footer">
+                        <span className="price">₪{product.price}</span>
+                        <button
+                          className="add-button"
+                          onClick={() => addToCart(product)}
+                        >
+                          הוסף לעגלה
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <div className="products-grid">
               <div className="menu-card" onClick={openMenuModal}>
                 <div className="menu-image">
                   <img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663365476934/aZxzMVwiMYyZpyrP.jpeg" alt="תפריט קינוחים" />
@@ -310,7 +378,7 @@ function App() {
             <p>🚗 איסוף עצמי: תל אביב צפון</p>
             <p>💳 אנחנו מקבלים: כרטיס אשראי, ביט, פייבוקס</p>
           </div>
-          <button 
+          <button
             className="footer-whatsapp-btn"
             onClick={() => window.open(WHATSAPP_LINK, '_blank')}
           >
