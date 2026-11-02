@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 
 interface Product {
@@ -120,11 +120,13 @@ const packages: Product[] = [
 
 const DELIVERY_COST = 30;
 const WHATSAPP_LINK = "https://api.whatsapp.com/send?phone=9720506793031";
+type InfoModal = 'accessibility' | 'privacy' | 'terms' | null;
 
 function App() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [showCart, setShowCart] = useState(false);
   const [showMenuModal, setShowMenuModal] = useState(false);
+  const [infoModal, setInfoModal] = useState<InfoModal>(null);
 
   const toggleCart = () => {
     setShowCart(!showCart);
@@ -141,6 +143,18 @@ function App() {
   const closeMenuModal = () => {
     setShowMenuModal(false);
   };
+
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setShowMenuModal(false);
+        setInfoModal(null);
+      }
+    };
+
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, []);
 
   const addToCart = (product: Product) => {
     const existingItem = cart.find(item => item.id === product.id);
@@ -185,7 +199,7 @@ function App() {
     });
 
     message += `\nסכום ביניים: ₪${subtotal}\n`;
-    message += `משלוח (גוש דן): ₪${DELIVERY_COST}\n`;
+    message += `משלוח (תל אביב ורמת השרון): ₪${DELIVERY_COST}\n`;
     message += `סה"כ: ₪${total}`;
 
     const encodedMessage = encodeURIComponent(message);
@@ -194,6 +208,7 @@ function App() {
 
   return (
     <div className="app">
+      <a className="skip-link" href="#main-content">דלג לתוכן הראשי</a>
       <header className="header">
         <div className="header-content">
           <button
@@ -207,13 +222,14 @@ function App() {
           <button
             className="cart-button"
             onClick={toggleCart}
+            aria-label={`פתיחת עגלת הקניות, ${cart.length} מוצרים בעגלה`}
           >
-            🛒 עגלה ({cart.length})
+            🛒 עגלה <span aria-live="polite">({cart.length})</span>
           </button>
         </div>
       </header>
 
-      <main className="main-content">
+      <main id="main-content" className="main-content" tabIndex={-1}>
         {showCart ? (
           <div className="cart-section">
             <h2>עגלת הקניות שלך</h2>
@@ -229,14 +245,15 @@ function App() {
                         <p>{item.unit}</p>
                       </div>
                       <div className="cart-item-quantity">
-                        <button onClick={() => updateQuantity(item.id, item.quantity - 1)}>−</button>
+                        <button aria-label={`הפחת כמות של ${item.name}`} onClick={() => updateQuantity(item.id, item.quantity - 1)}>−</button>
                         <span>{item.quantity}</span>
-                        <button onClick={() => updateQuantity(item.id, item.quantity + 1)}>+</button>
+                        <button aria-label={`הוסף כמות של ${item.name}`} onClick={() => updateQuantity(item.id, item.quantity + 1)}>+</button>
                       </div>
                       <div className="cart-item-price">
                         <p>₪{item.price * item.quantity}</p>
                         <button
                           className="remove-btn"
+                          aria-label={`הסר את ${item.name} מהעגלה`}
                           onClick={() => removeFromCart(item.id)}
                         >
                           ✕
@@ -252,7 +269,7 @@ function App() {
                     <span>₪{subtotal}</span>
                   </div>
                   <div className="summary-row">
-                    <span>משלוח (גוש דן):</span>
+                    <span>משלוח (תל אביב ורמת השרון):</span>
                     <span>₪{DELIVERY_COST}</span>
                   </div>
                   <div className="summary-row total">
@@ -300,6 +317,7 @@ function App() {
                         <span className="price">₪{product.price}</span>
                         <button
                           className="add-button"
+                          aria-label={`הוסף לעגלה: ${product.name}, ${product.price} שקלים`}
                           onClick={() => addToCart(product)}
                         >
                           הוסף לעגלה
@@ -333,6 +351,7 @@ function App() {
                         <span className="price">₪{product.price}</span>
                         <button
                           className="add-button"
+                          aria-label={`הוסף לעגלה: ${product.name}, ${product.price} שקלים`}
                           onClick={() => addToCart(product)}
                         >
                           הוסף לעגלה
@@ -345,7 +364,19 @@ function App() {
             </section>
 
             <div className="products-grid">
-              <div className="menu-card" onClick={openMenuModal}>
+              <div
+                className="menu-card"
+                role="button"
+                tabIndex={0}
+                aria-label="פתיחת תפריט קינוחים מלא"
+                onClick={openMenuModal}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    openMenuModal();
+                  }
+                }}
+              >
                 <div className="menu-image">
                   <img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663365476934/aZxzMVwiMYyZpyrP.jpeg" alt="תפריט קינוחים" />
                 </div>
@@ -360,10 +391,46 @@ function App() {
       </main>
 
       {showMenuModal && (
-        <div className="modal-overlay" onClick={closeMenuModal}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <button className="modal-close" onClick={closeMenuModal}>✕</button>
+        <div className="modal-overlay" role="presentation" onClick={closeMenuModal}>
+          <div className="modal-content" role="dialog" aria-modal="true" aria-labelledby="menu-modal-title" onClick={(e) => e.stopPropagation()}>
+            <h2 id="menu-modal-title" className="visually-hidden">תפריט קינוחים מלא</h2>
+            <button className="modal-close" aria-label="סגירת תפריט הקינוחים" onClick={closeMenuModal}>✕</button>
             <img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663365476934/aZxzMVwiMYyZpyrP.jpeg" alt="תפריט קינוחים" className="modal-image" />
+          </div>
+        </div>
+      )}
+
+      {infoModal && (
+        <div className="modal-overlay" role="presentation" onClick={() => setInfoModal(null)}>
+          <div className="info-modal" role="dialog" aria-modal="true" aria-labelledby="info-modal-title" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close" aria-label="סגירת חלון המידע" onClick={() => setInfoModal(null)}>✕</button>
+            {infoModal === 'accessibility' && (
+              <>
+                <h2 id="info-modal-title">הצהרת נגישות</h2>
+                <p>פיתויים קולינרים פועל להנגשת האתר ולאפשר שימוש נוח ושוויוני לכלל הגולשים, בהתאם לעקרונות תקן ישראלי 5568 המבוסס על WCAG 2.0 ברמה AA.</p>
+                <p>באתר הוטמעו, בין היתר, ניווט באמצעות מקלדת, קישור לדילוג לתוכן, מבנה כותרות, טקסט חלופי לתמונות, תוויות לכפתורים, ניגודיות מתאימה ותמיכה במסכים צרים.</p>
+                <p>האתר לא עבר בשלב זה בדיקה מלאה על ידי מורשה נגישות או בדיקה מקיפה בכל טכנולוגיות העזר. אם נתקלתם בקושי, נשמח לקבל דיווח ולפעול לתיקון.</p>
+                <p><strong>רכז/ת נגישות ופניות:</strong> שאול<br />טלפון: <a href="tel:0506793031">050-6793031</a><br />דוא״ל: <a href="mailto:shaul79@hotmail.com">shaul79@hotmail.com</a></p>
+                <p>תאריך עדכון ההצהרה: 2 בנובמבר 2026.</p>
+              </>
+            )}
+            {infoModal === 'privacy' && (
+              <>
+                <h2 id="info-modal-title">מדיניות פרטיות</h2>
+                <p>האתר אינו דורש הרשמה ואינו שומר חשבון משתמש או פרטי אשראי. פרטי ההזמנה מועברים ל‑WhatsApp רק לאחר שהלקוח בוחר ללחוץ על כפתור שליחת ההזמנה.</p>
+                <p>המשך השיחה והמידע שנשלח בה כפופים גם למדיניות הפרטיות של WhatsApp. אין להזין בהודעה מידע שאינו נחוץ לביצוע ההזמנה.</p>
+                <p>פנייה בנושא פרטיות או בקשה למחיקת מידע שנמסר יש לשלוח ל‑<a href="mailto:shaul79@hotmail.com">shaul79@hotmail.com</a>. מדיניות זו אינה תחליף לבדיקה משפטית של חובות העסק לפי הדין החל.</p>
+              </>
+            )}
+            {infoModal === 'terms' && (
+              <>
+                <h2 id="info-modal-title">תנאי הזמנה ומידע לצרכן</h2>
+                <p>המחירים באתר מוצגים בשקלים. עלות משלוח היא 30 ₪, והמשלוחים מתבצעים לתל אביב ולרמת השרון. ניתן לבצע איסוף עצמי מתל אביב צפון.</p>
+                <p>אמצעי התשלום: כרטיס אשראי, Bit ופייבוקס. ההזמנה אינה מאושרת עד לקבלת אישור מפורש ב‑WhatsApp מהעסק, ובו יימסרו מועד האספקה, זמינות המוצר וכל פרט נוסף הנדרש.</p>
+                <p>מוצרי מזון עשויים להיות מתכלים או מיוצרים במיוחד. בקשות לביטול, שינוי או החזר יש להעביר בהקדם ב‑WhatsApp, והן יטופלו בהתאם לדין ולמאפייני המוצר או ההזמנה.</p>
+                <p>לפני הזמנה יש לעדכן על אלרגיות או רגישויות. ניתן לבקש התאמה טבעונית ברוב המוצרים, בכפוף לאישור העסק.</p>
+              </>
+            )}
           </div>
         </div>
       )}
@@ -379,11 +446,17 @@ function App() {
           </div>
           <button
             className="footer-whatsapp-btn"
+            aria-label="יצירת קשר עם פיתויים קולינרים בוואטסאפ"
             onClick={() => window.open(WHATSAPP_LINK, '_blank')}
           >
             💬 צור קשר בווטסאפ
           </button>
         </div>
+        <nav className="footer-links" aria-label="מידע משפטי ונגישות">
+          <button onClick={() => setInfoModal('accessibility')}>הצהרת נגישות</button>
+          <button onClick={() => setInfoModal('privacy')}>מדיניות פרטיות</button>
+          <button onClick={() => setInfoModal('terms')}>תנאי הזמנה</button>
+        </nav>
       </footer>
     </div>
   );
